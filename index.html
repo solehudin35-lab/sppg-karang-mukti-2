@@ -2,67 +2,37 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SPPG Salawu - Checklist</title>
+<title>SPPG karang mukti 2 </title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{max-width:480px;margin:0 auto;background:#f1f5f9;font-family:system-ui,sans-serif;padding:12px}
-.header{background:#1e293b;color:#fff;padding:16px;border-radius:12px;margin-bottom:12px}
-.tab{padding:8px 16px;border-radius:20px;border:1px solid #ddd;display:inline-block;margin-right:6px;cursor:pointer}
-.tab.active{background:#1e293b;color:#fff}
-.card{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid #e2e8f0;display:flex;gap:10px}
-.card.done{background:#dcfce7;border-color:#86efac}
-.card.done b{text-decoration:line-through}
-.check{width:26px;height:26px;border-radius:50%;border:2px solid #94a3b8;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
-.card.done .check{background:#16a34a;border-color:#16a34a;color:#fff}
-.progress{height:8px;background:#e5e7eb;border-radius:10px;overflow:hidden;margin-top:8px}
-.fill{height:100%;background:#22c55e;width:0%;transition:.3s}
+body{background:#f0fdf4;font-family:system-ui;max-width:500px;margin:0 auto}
+.header{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:20px 16px 14px;border-radius:0 0 20px 20px;position:sticky;top:0;z-index:10}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:12px 16px}
+.tab{padding:8px 14px;border-radius:20px;background:#fff;border:1px solid #d1fae5;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.tab.active{background:#16a34a;color:#fff}
+.list{padding:0 12px 20px}
+.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;display:flex;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.card.done{opacity:.6;background:#f0fdf4}
+.check{width:30px;height:30px;border-radius:50%;border:2px solid #86efac;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.card.done .check{background:#16a34a;color:#fff}
 </style>
 </head>
 <body>
 <div class="header">
-<h3>SPPG Karang Mukti 2</h3>
-<p id="status">Klik lingkaran = auto kesimpen ke Sheet</p>
-<div class="progress"><div id="fill" class="fill"></div></div>
+<h1>🥗 SPPG Karang Mukti 2</h1>
+<p id="status">Memuat...</p>
+<div style="height:8px;background:rgba(255,255,255,.25);border-radius:10px;margin-top:10px"><div id="fill" style="height:100%;background:#bbf7d0;width:0%"></div></div>
 </div>
-<div id="list">Memuat...</div>
-
+<div class="tabs" id="tabs"></div>
+<div class="list" id="list"></div>
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyU8eQA6nTCoTpp2UOvD-LEDaNpqaXX5TI8dMhht-g6AelRStD6GlGSe8EJudCHrNaZ/exec";
-let data=[];
-async function load(){
-  const r = await fetch(SCRIPT_URL);
-  data = await r.json();
-  render();
-}
-function render(){
-  const wrap=document.getElementById('list');
-  let doneCount=data.filter(d=>(d.selesai||'').toLowerCase()=='x').length;
-  document.getElementById('fill').style.width = data.length? (doneCount/data.length*100)+'%' : '0%';
-  let html='';
-  data.forEach(it=>{
-    const done=(it.selesai||'').toLowerCase()=='x';
-    html+=`<div class="card ${done?'done':''}">
-      <div class="check" onclick="toggle(${it.row})">${done?'✓':''}</div>
-      <div style="flex:1">
-        <b>${it.menu}</b><br>
-        <small>${it.hari} - ${it.bahan||''}</small><br>
-        <small>📝 ${it.sop||''}</small><br>
-        ${it.link?`<a href="${it.link}" target="_blank">▶️ Video</a>`:''}
-      </div>
-    </div>`;
-  });
-  wrap.innerHTML=html;
-}
-async function toggle(row){
-  const it=data.find(x=>x.row==row);
-  const newVal=(it.selesai||'').toLowerCase()=='x'?'':'x';
-  it.selesai=newVal;
-  render();
-  document.getElementById('status').textContent='Menyimpan ke Sheet...';
-  await fetch(`${SCRIPT_URL}?action=update&row=${row}&val=${newVal}`,{mode:'no-cors'});
-  document.getElementById('status').textContent='✅ Tersimpan di kolom F!';
-  setTimeout(()=>document.getElementById('status').textContent='Klik lingkaran = auto kesimpen ke Sheet',2000);
-}
+let data=[],activeDay='Semua';
+async function load(){const r=await fetch(SCRIPT_URL);data=await r.json();renderTabs();render();}
+function renderTabs(){const days=['Semua',...new Set(data.map(d=>d.hari.trim()).filter(Boolean))];document.getElementById('tabs').innerHTML=days.map(d=>`<div class="tab ${d===activeDay?'active':''}" onclick="setDay('${d}')">${d}</div>`).join('')}
+function setDay(d){activeDay=d;renderTabs();render()}
+function render(){let f=activeDay==='Semua'?data:data.filter(d=>d.hari.trim()===activeDay);let done=data.filter(d=>(d.selesai||'').toLowerCase()=='x').length;document.getElementById('fill').style.width=(done/data.length*100)+'%';document.getElementById('status').textContent=`${done}/${data.length} selesai`;document.getElementById('list').innerHTML=f.map(it=>{const done=(it.selesai||'').toLowerCase()=='x';return `<div class="card ${done?'done':''}"><div class="check" onclick="toggle(${it.row})">${done?'✓':''}</div><div><b>${it.menu}</b><br><small>${it.hari} - ${it.bahan||''}</small><br>${it.link?`<a href="${it.link}" target=_blank>▶️ Video</a>`:''}</div></div>`}).join('')}
+async function toggle(row){const it=data.find(x=>x.row==row);it.selesai=it.selesai.toLowerCase()=='x'?'':'x';render();await fetch(`${SCRIPT_URL}?action=update&row=${row}&val=${it.selesai}`,{mode:'no-cors'})}
 load();
 </script>
 </body>
