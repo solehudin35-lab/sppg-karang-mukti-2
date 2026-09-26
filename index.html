@@ -16,7 +16,7 @@ body{max-width:480px;margin:0 auto;background:#faf6f1}
 <div>
 <p style="color:#fbbf24;font-size:10px;font-weight:800">SPPG KARANG MUKTI 2 - SALAWU TASIK</p>
 <h1 style="font-size:19px;font-weight:900;margin-top:4px">Tugas Tim Persiapan</h1>
-<p style="font-size:12px;margin-top:6px">👨‍🍳 Chef Soleh - <span id="st">✅ Live dari Google Sheet</span></p>
+<p style="font-size:12px;margin-top:6px">👨‍🍳 Chef Soleh - <span id="st">Loading...</span></p>
 </div>
 <img src="https://i.ibb.co.com/m5TmYLPD/IMG-20260926-WA5417.jpg" style="width:64px;height:64px;border-radius:50%;border:3px solid #fbbf24;object-fit:cover">
 </div>
@@ -29,37 +29,58 @@ body{max-width:480px;margin:0 auto;background:#faf6f1}
 <div class="tab" onclick="filterHari('Jumat',this)">Jumat</div>
 </div>
 
-<div style="padding:16px" id="box">Loading tugas lada hitam...</div>
+<div style="padding:16px" id="box">Loading tugas lada hitam dari Sheet...</div>
 
 <script>
-// PAKAI LINK PUBLIKASI LU YANG BARU - UDAH LIVE!
 const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRkQ6OIpZIv5m9-UNOAyOCyI4nziogWziJhMgFrIo_6IgpiI57GjD2yqYFPMU1-GNBFEDjof9WWh/pub?gid=0&single=true&output=csv";
 let all=[];
+
+// Parser CSV yang bener, handle koma di dalam teks
+function parseCSV(text){
+ const rows=[]; let curRow=[]; let cur=""; let inQ=false;
+ for(let i=0;i<text.length;i++){
+  const c=text[i], n=text[i+1];
+  if(c=='"'){ if(inQ && n=='"'){cur+='"';i++;} else inQ=!inQ; }
+  else if(c==',' &&!inQ){curRow.push(cur.trim());cur="";}
+  else if((c=='\n' || c=='\r') &&!inQ){ if(cur!="" || curRow.length>0){curRow.push(cur.trim());rows.push(curRow);curRow=[];cur="";} if(c=='\r'&&n=='\n')i++; }
+  else cur+=c;
+ }
+ if(cur!=""||curRow.length>0){curRow.push(cur.trim());rows.push(curRow);}
+ return rows;
+}
 
 async function load(){
  try{
   const r=await fetch(CSV_URL); const t=await r.text();
-  const rows=t.split('\n').map(x=>x.split(',').map(c=>c.replace(/^"|"$/g,'').trim()));
-  all=rows.slice(1).filter(x=>x[0] && x[0].toLowerCase()!=='hari');
+  const rows=parseCSV(t);
+  // Filter baris yang Hari nya keisi
+  all=rows.slice(1).filter(x=> x[0] && x[0].toLowerCase()!=='hari' && x[0].trim()!=='');
   document.getElementById('st').innerText=`✅ Live ${all.length} tugas`;
   filterHari('Senin',document.querySelector('.tab'));
+  if(all.length==0){
+    document.getElementById('box').innerHTML=`<div style="background:white;padding:16px;border-radius:12px;font-size:13px">Sheet kebaca tapi kosong.<br><br>Raw CSV preview:<br><pre style="white-space:pre-wrap;font-size:10px;background:#f5f5f5;padding:8px;max-height:200px;overflow:auto">${t.slice(0,500)}</pre></div>`;
+  }
  }catch(e){
-  document.getElementById('box').innerHTML='Error load sheet: '+e;
+  document.getElementById('st').innerText='❌ Gagal';
+  document.getElementById('box').innerHTML='Error: '+e;
  }
 }
 
 function filterHari(hari,el){
- document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); el.classList.add('active');
- const data=all.filter(d=>d[0].toLowerCase().includes(hari.toLowerCase()));
- if(!data.length){document.getElementById('box').innerHTML=`<p style="text-align:center;padding:30px;color:#999">Belum ada tugas ${hari}</p>`;return;}
+ document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); if(el) el.classList.add('active');
+ const data=all.filter(d=> d[0] && d[0].toLowerCase().includes(hari.toLowerCase()));
+ if(!data.length){document.getElementById('box').innerHTML=`<p style="text-align:center;padding:30px;color:#999">Belum ada tugas ${hari}<br><small>Tambah di Google Sheet</small></p>`;return;}
  let h=`<p style="color:#8b7e6f;font-size:13px;margin-bottom:12px">${hari} - Edit di Google Sheet tanpa ngoding</p>`;
  data.forEach(d=>{
-  const menu=d[1]||'-'; let bahan=d[2]||'-'; const link=d[3]||''; const sop=d[4]||'';
-  const yt=(bahan+' '+link).match(/https:\/\/youtu[^\s,]+/)?.[0] || link;
-  bahan=bahan.replace(/https:\/\/[^\s,]+/g,'').replace(/\|/g,'<br>• ');
-  h+=`<div style="display:flex;justify-content:space-between;margin:16px 0 6px"><b>${menu}</b>
+  const menu=(d[1]||'-').replace(/^"|"$/g,'');
+  let bahan=(d[2]||'-').replace(/^"|"$/g,'');
+  const link=(d[3]||'').replace(/^"|"$/g,'');
+  const sop=(d[4]||'').replace(/^"|"$/g,'');
+  const yt=(link.match(/https:\/\/[^\s,"]+/)||bahan.match(/https:\/\/[^\s,"]+/)||[''])[0];
+  bahan=bahan.replace(/https:\/\/[^\s,"]+/g,'').replace(/\|/g,'<br>• ');
+  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0 6px"><b style="font-size:14px">${menu}</b>
   <div>${yt?`<a href="${yt}" target="_blank" style="background:#f1e9dd;padding:5px 10px;border-radius:20px;font-size:11px;text-decoration:none;color:#333">🎥 Video</a>`:''}
-  ${sop?`<span onclick="alert('SOP ${menu}:\\n${sop}')" style="background:#e8f5e9;padding:5px 10px;border-radius:20px;font-size:11px;margin-left:4px;cursor:pointer">📄 SOP</span>`:''}</div></div>
+  ${sop?`<span onclick="alert('SOP ${menu}:\\n${sop}')" style="background:#e8f5e9;padding:5px 10px;border-radius:20px;font-size:11px;margin-left:4px">📄 SOP</span>`:''}</div></div>
   <div class="card"><div style="font-size:13px;line-height:1.7">• ${bahan}${sop?`<br><br><small style="color:#666">📌 SOP: ${sop}</small>`:''}</div></div>`;
  });
  document.getElementById('box').innerHTML=h;
