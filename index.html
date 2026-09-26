@@ -1,61 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SPPG Karang Mukti 2 Salawu - Chef Soleh Live Sheet</title>
+<title>SPPG Salawu - Chef Soleh</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
+body{max-width:480px;margin:0 auto;background:#faf6f1}
+.header{background:#1e293b;color:white;padding:18px 20px;display:flex;justify-content:space-between;align-items:center}
+.tab{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;border:1px solid #ddd;background:white;margin-right:6px;cursor:pointer}
+.tab.active{background:#1e293b;color:white}
+.card{background:white;border-radius:16px;border:1px solid #e8ddd0;padding:14px 16px;margin-bottom:12px}
+</style>
 </head>
-<body style="max-width:480px;margin:0 auto;background:#faf6f1;font-family:sans-serif;margin-bottom:60px">
-
-<div style="background:#1e293b;color:white;padding:18px 20px;display:flex;justify-content:space-between;align-items:center">
-<div><p style="color:#fbbf24;font-size:10px;letter-spacing:1.5px;font-weight:800">SPPG KARANG MUKTI 2 - SALAWU TASIKMALAYA</p>
-<h1 style="font-size:20px;font-weight:800;margin-top:4px">Tugas Tim Persiapan</h1>
-<p style="font-size:12px;opacity:.9;margin-top:6px">👨‍🍳 Chef: Solehudin - Live Sprenset</p></div>
-<img src="https://i.ibb.co.com/m5TmYLPD/IMG-20260926-WA5417.jpg" style="width:68px;height:68px;border-radius:50%;border:3px solid #fbbf24;object-fit:cover">
+<body>
+<div class="header">
+<div>
+<p style="color:#fbbf24;font-size:10px;font-weight:800">SPPG KARANG MUKTI 2 - SALAWU TASIK</p>
+<h1 style="font-size:19px;font-weight:900;margin-top:4px">Tugas Tim Persiapan</h1>
+<p style="font-size:12px;margin-top:6px">👨‍🍳 Chef Soleh - <span id="st">✅ Live dari Google Sheet</span></p>
+</div>
+<img src="https://i.ibb.co.com/m5TmYLPD/IMG-20260926-WA5417.jpg" style="width:64px;height:64px;border-radius:50%;border:3px solid #fbbf24;object-fit:cover">
 </div>
 
-<div style="padding:16px">
-
-<div style="background:#1e293b;border-radius:16px;padding:16px;color:white;margin-bottom:20px">
-<h3 style="color:#fbbf24;font-size:14px">📊 DATA ANAK PERSIAPAN - LIVE</h3>
-<p style="font-size:11px;opacity:0.7" id="status">Loading dari Google Sheet...</p>
-<div id="sheetBox" style="background:white;border-radius:12px;margin-top:12px;padding:2px;overflow:hidden;max-height:400px;overflow-y:auto"></div>
+<div style="display:flex;padding:12px 16px;background:white;overflow-x:auto;border-bottom:1px solid #eee">
+<div class="tab active" onclick="filterHari('Senin',this)">Senin</div>
+<div class="tab" onclick="filterHari('Selasa',this)">Selasa</div>
+<div class="tab" onclick="filterHari('Rabu',this)">Rabu</div>
+<div class="tab" onclick="filterHari('Kamis',this)">Kamis</div>
+<div class="tab" onclick="filterHari('Jumat',this)">Jumat</div>
 </div>
 
-<p style="color:#8b7e6f;font-size:13px;margin-bottom:12px">Menyiapkan untuk Senin: Nasi Putih · Ayam Lada Hitam · Tempe Mendol · Tumis Wortel Jagung</p>
-
-<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><div style="width:14px;height:14px;background:#c49a6c;border-radius:3px"></div><b>Karbohidrat</b></div>
-<div style="background:white;border-radius:12px;border:1px solid #e8ddd0;padding:14px;margin-bottom:16px">Nasi Putih - SPPG Salawu Tasikmalaya</div>
-
-<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><div style="width:14px;height:14px;background:#c45c3e;border-radius:3px"></div><b>Lauk Hewani</b></div>
-<div style="background:white;border-radius:12px;border:1px solid #e8ddd0;padding:14px;margin-bottom:16px">Ayam Saus Lada Hitam - cek Sheet untuk detail porsi anak</div>
-
-<div style="text-align:center;color:#aaa;font-size:11px;margin-top:20px">SPPG Karang Mukti 2 • Salawu Tasikmalaya • Auto Sprenset</div>
-</div>
+<div style="padding:16px" id="box">Loading tugas lada hitam...</div>
 
 <script>
-const SHEET_ID = "1Jwo_BiPruKNqLSoBA-XHZZ13lCEi6v8HOVhFJmXdd4g";
-const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+// PAKAI LINK PUBLIKASI LU YANG BARU - UDAH LIVE!
+const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRkQ6OIpZIv5m9-UNOAyOCyI4nziogWziJhMgFrIo_6IgpiI57GjD2yqYFPMU1-GNBFEDjof9WWh/pub?gid=0&single=true&output=csv";
+let all=[];
 
-async function loadSheet(){
-  try{
-    const res = await fetch(CSV_URL);
-    const text = await res.text();
-    const rows = text.split('\n').map(r=>r.split(',').map(c=>c.replace(/"/g,'').trim())).filter(r=>r[0]);
-    if(rows.length==0) throw "Kosong";
-    let html = `<table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="background:#f9f5f0;font-weight:800">`;
-    rows[0].forEach(h=> html+=`<th style="padding:8px;text-align:left;border-bottom:1px solid #eee">${h}</th>`);
-    html+=`</tr>`;
-    rows.slice(1,30).forEach(r=>{
-      html+=`<tr>${r.map(c=>`<td style="padding:8px;border-top:1px solid #f0f0f0">${c}</td>`).join('')}</tr>`;
-    });
-    html+=`</table>`;
-    document.getElementById('sheetBox').innerHTML = html;
-    document.getElementById('status').innerText = `✅ Live - ${rows.length-1} data anak - Salawu Tasikmalaya`;
-  }catch(e){
-    document.getElementById('sheetBox').innerHTML = `<div style="padding:20px;text-align:center;color:#666;font-size:12px">❌ Belum bisa load<br><br>1. Buka Sheet > File > Publish to web > CSV > Publish<br>2. Pastikan Share Anyone with link<br><br>Error: ${e}</div>`;
-    document.getElementById('status').innerText = "⚠️ Publish dulu Sheet nya bro";
-  }
+async function load(){
+ try{
+  const r=await fetch(CSV_URL); const t=await r.text();
+  const rows=t.split('\n').map(x=>x.split(',').map(c=>c.replace(/^"|"$/g,'').trim()));
+  all=rows.slice(1).filter(x=>x[0] && x[0].toLowerCase()!=='hari');
+  document.getElementById('st').innerText=`✅ Live ${all.length} tugas`;
+  filterHari('Senin',document.querySelector('.tab'));
+ }catch(e){
+  document.getElementById('box').innerHTML='Error load sheet: '+e;
+ }
 }
-loadSheet();
+
+function filterHari(hari,el){
+ document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); el.classList.add('active');
+ const data=all.filter(d=>d[0].toLowerCase().includes(hari.toLowerCase()));
+ if(!data.length){document.getElementById('box').innerHTML=`<p style="text-align:center;padding:30px;color:#999">Belum ada tugas ${hari}</p>`;return;}
+ let h=`<p style="color:#8b7e6f;font-size:13px;margin-bottom:12px">${hari} - Edit di Google Sheet tanpa ngoding</p>`;
+ data.forEach(d=>{
+  const menu=d[1]||'-'; let bahan=d[2]||'-'; const link=d[3]||''; const sop=d[4]||'';
+  const yt=(bahan+' '+link).match(/https:\/\/youtu[^\s,]+/)?.[0] || link;
+  bahan=bahan.replace(/https:\/\/[^\s,]+/g,'').replace(/\|/g,'<br>• ');
+  h+=`<div style="display:flex;justify-content:space-between;margin:16px 0 6px"><b>${menu}</b>
+  <div>${yt?`<a href="${yt}" target="_blank" style="background:#f1e9dd;padding:5px 10px;border-radius:20px;font-size:11px;text-decoration:none;color:#333">🎥 Video</a>`:''}
+  ${sop?`<span onclick="alert('SOP ${menu}:\\n${sop}')" style="background:#e8f5e9;padding:5px 10px;border-radius:20px;font-size:11px;margin-left:4px;cursor:pointer">📄 SOP</span>`:''}</div></div>
+  <div class="card"><div style="font-size:13px;line-height:1.7">• ${bahan}${sop?`<br><br><small style="color:#666">📌 SOP: ${sop}</small>`:''}</div></div>`;
+ });
+ document.getElementById('box').innerHTML=h;
+}
+load();
 </script>
 </body>
 </html>
