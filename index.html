@@ -1,3 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SPPG Salawu - Chef Soleh</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{max-width:480px;margin:0 auto;background:#faf6f1}
+.header{background:#1e293b;color:#fff;padding:18px 20px;display:flex;justify-content:space-between;align-items:center}
+.tab{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;border:1px solid #ddd;background:#fff;margin-right:6px;cursor:pointer}
+.tab.active{background:#1e293b;color:#fff}
+.card{background:#fff;border-radius:16px;border:1px solid #e8ddd0;padding:14px;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="header">
+<div>
+<p style="color:#fbbf24;font-size:10px;font-weight:800">SPPG KARANG MUKTI 2 - SALAWU TASIK</p>
+<h1 style="font-size:19px;font-weight:900;margin-top:4px">Tugas Tim Persiapan</h1>
+<p style="font-size:12px;margin-top:6px">👨‍🍳 Chef Soleh - <span id="st">Loading...</span></p>
+</div>
+<img src="https://i.ibb.co.com/m5TmYLPD/IMG-20260926-WA5417.jpg" style="width:64px;height:64px;border-radius:50%;border:3px solid #fbbf24;object-fit:cover">
+</div>
+<div style="display:flex;padding:12px 16px;background:#fff;overflow-x:auto;border-bottom:1px solid #eee">
+<div class="tab active" onclick="filterHari('Senin',this)">Senin</div>
+<div class="tab" onclick="filterHari('Selasa',this)">Selasa</div>
+<div class="tab" onclick="filterHari('Rabu',this)">Rabu</div>
+<div class="tab" onclick="filterHari('Kamis',this)">Kamis</div>
+<div class="tab" onclick="filterHari('Jumat',this)">Jumat</div>
+</div>
+<div style="padding:16px" id="box">⏳ Menghubungkan ke Sheet...</div>
 <script>
 const SHEET_ID="1wF1j3pwtruw4mPEZqZ3rJKzJDTgS_6UOGW6B8GfdhSg";
 const URLS=[
@@ -15,26 +45,24 @@ async function load(){
    if(data.length>0){all=data;document.getElementById('st').innerText=`✅ Live ${all.length} tugas`;filterHari('Senin',document.querySelector('.tab'));return;}
   }catch(e){}
  }
+ document.getElementById('box').innerHTML='Gagal load, coba refresh';
 }
 function clean(s){return (s||'').toLowerCase().trim().replace(/[^a-z]/g,'');}
 function filterHari(hari,el){
  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(el)el.classList.add('active');
- // CLEAN: buang spasi, huruf besar kecil, biar SENIN, Senin, senin semua kebaca
  let target=clean(hari);
  let data=all.filter(d=>clean(d[0]).includes(target));
- if(!data.length){
-   // DEBUG: tampilin semua Hari yang kebaca dari Sheet
-   let semuaHari=all.map(d=>`'${d[0]}'`).join(', ');
-   document.getElementById('box').innerHTML=`<div style="background:white;padding:16px;border-radius:12px;font-size:13px">Data ada ${all.length} tapi Hari '${hari}' gak ketemu.<br><br>Hari yang kebaca dari Sheet: ${semuaHari}<br><br><b>Solusi:</b> Di Google Sheet pastikan kolom A tulis persis: Senin / Selasa / Rabu tanpa spasi di depan!</div>`;return;
- }
- let html=`<p style="color:#8b7e6f;font-size:13px;margin-bottom:12px">${hari} - ${data.length} tugas dari Sheet</p>`;
+ if(!data.length){document.getElementById('box').innerHTML=`<p style="text-align:center;padding:30px;color:#999">Belum ada tugas ${hari}</p>`;return;}
+ let html=`<p style="color:#8b7e6f;font-size:13px;margin-bottom:12px">${hari} - ${data.length} tugas</p>`;
  data.forEach(d=>{
   let menu=(d[1]||'-').replace(/^"|"$/g,''),bhn=(d[2]||'-').replace(/^"|"$/g,''),link=(d[3]||'').replace(/^"|"$/g,''),sop=(d[4]||'').replace(/^"|"$/g,'');
   let yt=(link.match(/https:\/\/[^\s"]+/)||bhn.match(/https:\/\/[^\s"]+/)||[''])[0];
   bhn=bhn.replace(/https:\/\/[^\s"]+/g,'').replace(/\|/g,'<br>• ');
-  html+=`<div style="display:flex;justify-content:space-between;margin:14px 0 6px"><b>${menu}</b><div>${yt?`<a href="${yt}" target="_blank" style="background:#f1e9dd;padding:5px 10px;border-radius:20px;font-size:11px;text-decoration:none">🎥 Video</a>`:''} ${sop?`<span onclick="alert('SOP ${menu}:\\n${sop}')" style="background:#e8f5e9;padding:5px 10px;border-radius:20px;font-size:11px;margin-left:4px">📄 SOP</span>`:''}</div></div><div style="background:white;border-radius:16px;border:1px solid #e8ddd0;padding:14px;margin-bottom:12px"><div style="font-size:13px;line-height:1.7">• ${bhn}${sop?`<br><br><small>📌 SOP: ${sop}</small>`:''}</div></div>`;
+  html+=`<div style="display:flex;justify-content:space-between;margin:14px 0 6px"><b>${menu}</b><div>${yt?`<a href="${yt}" target="_blank" style="background:#f1e9dd;padding:5px 10px;border-radius:20px;font-size:11px;text-decoration:none">🎥 Video</a>`:''} ${sop?`<span onclick="alert('SOP ${menu}:\\n${sop}')" style="background:#e8f5e9;padding:5px 10px;border-radius:20px;font-size:11px;margin-left:4px">📄 SOP</span>`:''}</div></div><div class="card"><div style="font-size:13px;line-height:1.7">• ${bhn}${sop?`<br><br><small>📌 SOP: ${sop}</small>`:''}</div></div>`;
  });
  document.getElementById('box').innerHTML=html;
 }
 load();
 </script>
+</body>
+</html>
