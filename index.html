@@ -1,85 +1,61 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPPG Karang Mukti 2</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-body{background:#f8fafc;color:#1e293b}
-header{background:linear-gradient(135deg,#16a34a,#15803d);color:white;padding:20px;text-align:center}
-header h1{font-size:28px;font-weight:700}
-nav{background:white;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0;z-index:10;display:flex;justify-content:center;gap:20px;padding:15px;overflow-x:auto}
-nav a{text-decoration:none;color:#15803d;font-weight:600;font-size:14px}
-.hero{background:white;margin:20px;border-radius:20px;padding:30px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.05)}
-.hero h2{color:#15803d;font-size:24px;margin-bottom:10px}
-.badge{display:inline-block;background:#dcfce7;color:#15803d;padding:6px 15px;border-radius:20px;font-size:12px;font-weight:600;margin:5px}
-.container{padding:20px;max-width:1000px;margin:auto}
-.card{background:white;border-radius:16px;padding:20px;margin-bottom:20px;box-shadow:0 4px 15px rgba(0,0,0,0.05)}
-.card h3{color:#15803d;margin-bottom:15px;border-left:4px solid #16a34a;padding-left:10px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px}
-.person{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:15px;text-align:center}
-.task{border-left:4px solid #16a34a;background:#f8fafc;padding:12px;margin:10px 0;border-radius:0 10px 10px 0}
-footer{background:#14532d;color:white;text-align:center;padding:25px;margin-top:30px}
-.btn{display:inline-block;background:#16a34a;color:white;padding:12px 25px;border-radius:30px;text-decoration:none;font-weight:600;margin-top:15px}
-</style>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SPPG Karang Mukti 2 Salawu - Chef Soleh Live Sheet</title>
 </head>
-<body>
-<header>
-<h1>SPPG KARANG MUKTI 2</h1>
-<p>Satuan Pelayanan Pemenuhan Gizi - Karangbahagia, Bekasi</p>
-<p>🍱 Melayani Gizi Terbaik Untuk Anak Bangsa</p>
-</header>
-<nav>
-<a href="#beranda">Beranda</a>
-<a href="#tugas">Tugas Tim</a>
-<a href="#struktur">Struktur</a>
-<a href="#program">Program</a>
-<a href="#kontak">Kontak</a>
-</nav>
-<div class="container">
-<div class="hero" id="beranda">
-<h2>Selamat Datang di SPPG Karang Mukti 2</h2>
-<p>Unit pelaksana Program Makan Bergizi Gratis (MBG) yang berkomitmen menyajikan makanan sehat, higienis, dan bergizi.</p>
-<div style="margin-top:15px">
-<span class="badge">✅ Higienis</span>
-<span class="badge">✅ Bergizi</span>
-<span class="badge">✅ Tepat Waktu</span>
-<span class="badge">✅ Halal</span>
+<body style="max-width:480px;margin:0 auto;background:#faf6f1;font-family:sans-serif;margin-bottom:60px">
+
+<div style="background:#1e293b;color:white;padding:18px 20px;display:flex;justify-content:space-between;align-items:center">
+<div><p style="color:#fbbf24;font-size:10px;letter-spacing:1.5px;font-weight:800">SPPG KARANG MUKTI 2 - SALAWU TASIKMALAYA</p>
+<h1 style="font-size:20px;font-weight:800;margin-top:4px">Tugas Tim Persiapan</h1>
+<p style="font-size:12px;opacity:.9;margin-top:6px">👨‍🍳 Chef: Solehudin - Live Sprenset</p></div>
+<img src="https://i.ibb.co.com/m5TmYLPD/IMG-20260926-WA5417.jpg" style="width:68px;height:68px;border-radius:50%;border:3px solid #fbbf24;object-fit:cover">
 </div>
-<a class="btn" href="#tugas">Lihat Tugas Tim →</a>
+
+<div style="padding:16px">
+
+<div style="background:#1e293b;border-radius:16px;padding:16px;color:white;margin-bottom:20px">
+<h3 style="color:#fbbf24;font-size:14px">📊 DATA ANAK PERSIAPAN - LIVE</h3>
+<p style="font-size:11px;opacity:0.7" id="status">Loading dari Google Sheet...</p>
+<div id="sheetBox" style="background:white;border-radius:12px;margin-top:12px;padding:2px;overflow:hidden;max-height:400px;overflow-y:auto"></div>
 </div>
-<div class="card" id="tugas">
-<h3>📋 TUGAS TIM PERSIAPAN - Chef Solehudin</h3>
-<div class="task"><b>1. Persiapan Dapur</b><br>Cek kompor, chiller, container, kebersihan jam 04.00 WIB</div>
-<div class="task"><b>2. Penerimaan Bahan</b><br>Cek kualitas sayur, ayam, telur, beras fresh sesuai SOP</div>
-<div class="task"><b>3. Proses Memasak</b><br>Pimpin tim masak, atur bumbu, kontrol rasa & porsi 600-700 kalori</div>
-<div class="task"><b>4. Packing & QC</b><br>Packing rapi, tutup rapat, label jelas, suhu aman</div>
-<div class="task"><b>5. Distribusi & Dokumentasi</b><br>Catat porsi, foto, serah terima ke tim sekolah</div>
-<div class="task"><b>6. Laporan Harian</b><br>Laporan sisa bahan & stok besok</div>
+
+<p style="color:#8b7e6f;font-size:13px;margin-bottom:12px">Menyiapkan untuk Senin: Nasi Putih · Ayam Lada Hitam · Tempe Mendol · Tumis Wortel Jagung</p>
+
+<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><div style="width:14px;height:14px;background:#c49a6c;border-radius:3px"></div><b>Karbohidrat</b></div>
+<div style="background:white;border-radius:12px;border:1px solid #e8ddd0;padding:14px;margin-bottom:16px">Nasi Putih - SPPG Salawu Tasikmalaya</div>
+
+<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><div style="width:14px;height:14px;background:#c45c3e;border-radius:3px"></div><b>Lauk Hewani</b></div>
+<div style="background:white;border-radius:12px;border:1px solid #e8ddd0;padding:14px;margin-bottom:16px">Ayam Saus Lada Hitam - cek Sheet untuk detail porsi anak</div>
+
+<div style="text-align:center;color:#aaa;font-size:11px;margin-top:20px">SPPG Karang Mukti 2 • Salawu Tasikmalaya • Auto Sprenset</div>
 </div>
-<div class="card" id="struktur">
-<h3>👨‍🍳 STRUKTUR TIM</h3>
-<div class="grid">
-<div class="person"><strong>Penanggung Jawab</strong>Koordinator Utama</div>
-<div class="person"><strong>Chef Solehudin</strong>Head Chef - Auto Sprenset</div>
-<div class="person"><strong>Ahli Gizi</strong>Hitung Kalori & Menu</div>
-<div class="person"><strong>Admin Logistik</strong>Stok Bahan</div>
-<div class="person"><strong>Tim Distribusi</strong>Antar Sekolah</div>
-<div class="person"><strong>Tim Kebersihan</strong>Sanitasi</div>
-</div>
-</div>
-<div class="card" id="kontak">
-<h3>📍 KONTAK</h3>
-<p><b>Alamat:</b> Karang Mukti 2, Kab. Bekasi 17530</p>
-<p><b>Jam Dapur:</b> 04.00 - 14.00 WIB</p>
-<p><b>Status:</b> <span style="color:#16a34a;font-weight:700">● AKTIF - Tahap Persiapan</span></p>
-</div>
-</div>
-<footer>
-<h3>SPPG KARANG MUKTI 2</h3>
-<p>© 2026 - Program Makan Bergizi Gratis</p>
-</footer>
+
+<script>
+const SHEET_ID = "1Jwo_BiPruKNqLSoBA-XHZZ13lCEi6v8HOVhFJmXdd4g";
+const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+
+async function loadSheet(){
+  try{
+    const res = await fetch(CSV_URL);
+    const text = await res.text();
+    const rows = text.split('\n').map(r=>r.split(',').map(c=>c.replace(/"/g,'').trim())).filter(r=>r[0]);
+    if(rows.length==0) throw "Kosong";
+    let html = `<table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="background:#f9f5f0;font-weight:800">`;
+    rows[0].forEach(h=> html+=`<th style="padding:8px;text-align:left;border-bottom:1px solid #eee">${h}</th>`);
+    html+=`</tr>`;
+    rows.slice(1,30).forEach(r=>{
+      html+=`<tr>${r.map(c=>`<td style="padding:8px;border-top:1px solid #f0f0f0">${c}</td>`).join('')}</tr>`;
+    });
+    html+=`</table>`;
+    document.getElementById('sheetBox').innerHTML = html;
+    document.getElementById('status').innerText = `✅ Live - ${rows.length-1} data anak - Salawu Tasikmalaya`;
+  }catch(e){
+    document.getElementById('sheetBox').innerHTML = `<div style="padding:20px;text-align:center;color:#666;font-size:12px">❌ Belum bisa load<br><br>1. Buka Sheet > File > Publish to web > CSV > Publish<br>2. Pastikan Share Anyone with link<br><br>Error: ${e}</div>`;
+    document.getElementById('status').innerText = "⚠️ Publish dulu Sheet nya bro";
+  }
+}
+loadSheet();
+</script>
 </body>
 </html>
