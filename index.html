@@ -1,68 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SPPG Salawu - Chef Soleh</title>
+<title>SPPG Salawu - Checklist</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
 body{max-width:480px;margin:0 auto;background:#faf6f1}
-.header{background:#1e293b;color:#fff;padding:18px 20px;display:flex;justify-content:space-between;align-items:center}
-.tab{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;border:1px solid #ddd;background:#fff;margin-right:6px;cursor:pointer}
+.header{background:#1e293b;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+.tab{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;border:1px solid #ddd;background:#fff;margin-right:6px;cursor:pointer;white-space:nowrap}
 .tab.active{background:#1e293b;color:#fff}
-.card{background:#fff;border-radius:16px;border:1px solid #e8ddd0;padding:14px;margin-bottom:12px}
+.card{background:#fff;border-radius:16px;border:1px solid #e8ddd0;padding:14px;margin-bottom:12px;transition:0.3s}
+.card.done{background:#dcfce7;border-color:#22c55e;opacity:0.8}
+.card.done b{text-decoration:line-through;color:#166534}
+.progress{height:8px;background:#e5e7eb;border-radius:10px;overflow:hidden;margin-top:8px}
+.fill{height:100%;background:#22c55e;transition:0.5s}
 </style>
 </head>
 <body>
 <div class="header">
-<div>
+<div style="flex:1">
 <p style="color:#fbbf24;font-size:10px;font-weight:800">SPPG KARANG MUKTI 2 - SALAWU TASIK</p>
-<h1 style="font-size:19px;font-weight:900;margin-top:4px">Tugas Tim Persiapan</h1>
+<h1 style="font-size:18px;font-weight:900;margin-top:4px">Tugas Tim Persiapan dan pengolahan</h1>
 <p style="font-size:12px;margin-top:6px">👨‍🍳 Chef Soleh - <span id="st">Loading...</span></p>
+<div class="progress"><div class="fill" id="fill" style="width:0%"></div></div>
+<p style="font-size:11px;margin-top:5px;color:#86efac" id="prog">0/0 selesai</p>
 </div>
-<img src="https://i.ibb.co.com/m5TmYLPD/IMG-20260926-WA5417.jpg" style="width:64px;height:64px;border-radius:50%;border:3px solid #fbbf24;object-fit:cover">
+<img src="https://i.ibb.co.com/m5TmYLPD/IMG-20260926-WA5417.jpg" style="width:58px;height:58px;border-radius:50%;border:3px solid #fbbf24;object-fit:cover;margin-left:10px">
 </div>
-<div style="display:flex;padding:12px 16px;background:#fff;overflow-x:auto;border-bottom:1px solid #eee">
+<div style="display:flex;padding:12px 16px;background:#fff;overflow-x:auto;border-bottom:1px solid #eee;position:sticky;top:92px;z-index:9">
 <div class="tab active" onclick="filterHari('Senin',this)">Senin</div>
 <div class="tab" onclick="filterHari('Selasa',this)">Selasa</div>
 <div class="tab" onclick="filterHari('Rabu',this)">Rabu</div>
 <div class="tab" onclick="filterHari('Kamis',this)">Kamis</div>
 <div class="tab" onclick="filterHari('Jumat',this)">Jumat</div>
 </div>
-<div style="padding:16px" id="box">⏳ Menghubungkan ke Sheet...</div>
+<div style="padding:16px" id="box">⏳ Loading...</div>
 <script>
 const SHEET_ID="1wF1j3pwtruw4mPEZqZ3rJKzJDTgS_6UOGW6B8GfdhSg";
-const URLS=[
- `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1&t=${Date.now()}`,
- `https://docs.google.com/spreadsheets/d/e/2PACX-1vRkQ6OIpZIv5m9-UNOAyOCyI4nziogWziJhMgFrIo_6IgpiI57GjD2yqYFPMU1-GNBFEDjof9WWh/pub?gid=0&single=true&output=csv&t=${Date.now()}`
-];
+const URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1&t=${Date.now()}`;
 let all=[];
-function parseCSV(t){const r=[];let cr=[],c="",q=false;for(let i=0;i<t.length;i++){let ch=t[i],nx=t[i+1];if(ch=='"'){if(q&&nx=='"'){c+='"';i++;}else q=!q;}else if(ch==','&&!q){cr.push(c.trim());c="";}else if((ch=='\n'||ch=='\r')&&!q){if(c||cr.length){cr.push(c.trim());r.push(cr);cr=[];c="";}if(ch=='\r'&&nx=='\n')i++;}else c+=ch;}if(c||cr.length){cr.push(c.trim());r.push(cr);}return r;}
-async function load(){
- for(let url of URLS){
-  try{
-   let res=await fetch(url); let text=await res.text();
-   let rows=parseCSV(text);
-   let data=rows.slice(1).filter(x=>x[0]&&x[0].toLowerCase()!=='hari'&&x[0].trim()!=='');
-   if(data.length>0){all=data;document.getElementById('st').innerText=`✅ Live ${all.length} tugas`;filterHari('Senin',document.querySelector('.tab'));return;}
-  }catch(e){}
- }
- document.getElementById('box').innerHTML='Gagal load, coba refresh';
-}
+function parseCSV(t){let r=[],cr=[],c="",q=false;for(let i=0;i<t.length;i++){let ch=t[i],nx=t[i+1];if(ch=='"'){if(q&&nx=='"'){c+='"';i++;}else q=!q;}else if(ch==','&&!q){cr.push(c.trim());c="";}else if((ch=='\n'||ch=='\r')&&!q){if(c||cr.length){cr.push(c.trim());r.push(cr);cr=[];c="";}if(ch=='\r'&&nx=='\n')i++;}else c+=ch;}if(c||cr.length){cr.push(c.trim());r.push(cr);}return r;}
+async function load(){try{let res=await fetch(URL);let txt=await res.text();let rows=parseCSV(txt);all=rows.slice(1).filter(x=>x[0]&&x[0].toLowerCase()!='hari');document.getElementById('st').innerText=`✅ Live ${all.length} tugas`;filterHari('Senin',document.querySelector('.tab.active'));}catch(e){document.getElementById('box').innerHTML='Gagal load sheet';}}
 function clean(s){return (s||'').toLowerCase().trim().replace(/[^a-z]/g,'');}
-function filterHari(hari,el){
- document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(el)el.classList.add('active');
- let target=clean(hari);
- let data=all.filter(d=>clean(d[0]).includes(target));
- if(!data.length){document.getElementById('box').innerHTML=`<p style="text-align:center;padding:30px;color:#999">Belum ada tugas ${hari}</p>`;return;}
- let html=`<p style="color:#8b7e6f;font-size:13px;margin-bottom:12px">${hari} - ${data.length} tugas</p>`;
- data.forEach(d=>{
-  let menu=(d[1]||'-').replace(/^"|"$/g,''),bhn=(d[2]||'-').replace(/^"|"$/g,''),link=(d[3]||'').replace(/^"|"$/g,''),sop=(d[4]||'').replace(/^"|"$/g,'');
-  let yt=(link.match(/https:\/\/[^\s"]+/)||bhn.match(/https:\/\/[^\s"]+/)||[''])[0];
-  bhn=bhn.replace(/https:\/\/[^\s"]+/g,'').replace(/\|/g,'<br>• ');
-  html+=`<div style="display:flex;justify-content:space-between;margin:14px 0 6px"><b>${menu}</b><div>${yt?`<a href="${yt}" target="_blank" style="background:#f1e9dd;padding:5px 10px;border-radius:20px;font-size:11px;text-decoration:none">🎥 Video</a>`:''} ${sop?`<span onclick="alert('SOP ${menu}:\\n${sop}')" style="background:#e8f5e9;padding:5px 10px;border-radius:20px;font-size:11px;margin-left:4px">📄 SOP</span>`:''}</div></div><div class="card"><div style="font-size:13px;line-height:1.7">• ${bhn}${sop?`<br><br><small>📌 SOP: ${sop}</small>`:''}</div></div>`;
- });
- document.getElementById('box').innerHTML=html;
+function isDoneMark(v){if(!v)return false;let s=v.toString().toLowerCase().trim();return s=='x'||s=='1'||s=='✓'||s=='✔'||s=='v'||s.includes('selesai')||s=='done';}
+function filterHari(h,el){
+if(el){document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));el.classList.add('active');}
+let target=clean(h);let data=all.filter(d=>clean(d[0]).includes(target));
+let doneCount=data.filter(d=>isDoneMark(d[5])).length;
+let pct=data.length?Math.round(doneCount/data.length*100):0;
+document.getElementById('fill').style.width=pct+'%';document.getElementById('prog').innerText=`${doneCount}/${data.length} selesai (${pct}%)`+(pct==100?' 🎉 Mantap!':'');
+if(!data.length){document.getElementById('box').innerHTML=`<p style="text-align:center;padding:30px;color:#999">Belum ada tugas ${h}</p>`;return;}
+let html=`<p style="font-size:12px;color:#8b7e6f;margin-bottom:12px">Senin - ${data.length} tugas | Ketik <b>x</b> di kolom F Sheet = auto hijau di semua HP ✅</p>`;
+data.forEach(d=>{
+let menu=(d[1]||'-').replace(/^"|"$/g,''),bahan=(d[2]||'-').replace(/^"|"$/g,''),link=(d[3]||'').replace(/^"|"$/g,''),sop=(d[4]||'').replace(/^"|"$/g,''),selesai=d[5]||'';
+let done=isDoneMark(selesai);
+let yt=(link.match(/https:\/\/[^\s"]+/)||bahan.match(/https:\/\/[^\s"]+/)||[''])[0];
+bahan=bahan.replace(/https:\/\/[^\s"]+/g,'').replace(/\|/g,'<br>• ');
+html+=`<div class="card ${done?'done':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div style="flex:1"><div style="display:flex;gap:8px;align-items:center"><div style="min-width:28px;height:28px;border-radius:50%;background:${done?'#22c55e':'#fff'};border:2px solid ${done?'#22c55e':'#ccc'};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900">${done?'✓':''}</div><b style="font-size:15px">${menu}</b></div><div style="font-size:13px;margin-top:10px;line-height:1.7;background:#faf6f1;padding:10px;border-radius:10px">• ${bahan}${sop?`<br><br>📌 <b>SOP:</b> ${sop}`:''}</div>${done?`<p style="font-size:11px;color:#16a34a;margin-top:8px;font-weight:700">✅ SELESAI - kolom F = ${selesai}</p>`:''}</div><div style="display:flex;flex-direction:column;gap:6px">${yt?`<a href="${yt}" target="_blank" style="background:#f1e9dd;padding:6px 12px;border-radius:20px;font-size:11px;text-decoration:none;text-align:center">🎥 Video</a>`:''}${sop?`<span onclick="alert('SOP ${menu}:\\n${sop}')" style="background:#e8f5e9;padding:6px 12px;border-radius:20px;font-size:11px;text-align:center;cursor:pointer">📄 SOP</span>`:''}</div></div></div>`;
+});
+document.getElementById('box').innerHTML=html;
 }
-load();
+load();setInterval(load,30000);
 </script>
 </body>
 </html>
