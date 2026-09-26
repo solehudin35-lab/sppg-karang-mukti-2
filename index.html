@@ -70,7 +70,7 @@ function render(){
  document.getElementById('fill').style.width=pct+'%';
  document.getElementById('status').textContent=`${doneTotal}/${data.length} selesai (${pct}%)`;
  document.getElementById('live').textContent=`Live ${data.length} tugas`;
- document.getElementById('infobar').innerHTML=`${active} - ${filtered.length} tugas | Ketik <b>x</b> di kolom F Sheet = auto hijau di semua HP ✅`;
+ document.getElementById('infobar').innerHTML=`${active} - ${filtered.length} tugas | Ketik <b>x</b>  Sheet = `;
  let html='';
  filtered.forEach(it=>{
   let done=(it.selesai||'').toLowerCase().trim()==='x';
@@ -85,7 +85,7 @@ async function toggle(row){
  it.selesai=newVal; render();
  document.getElementById('status').textContent='Menyimpan ke Sheet...';
  await fetch(`${SCRIPT_URL}?action=update&row=${row}&val=${encodeURIComponent(newVal)}`,{mode:'no-cors'});
- document.getElementById('status').textContent='✅ Tersimpan di kolom F!';
+ document.getElementById('status').textContent='';
  setTimeout(render,1000);
 }
 load();
