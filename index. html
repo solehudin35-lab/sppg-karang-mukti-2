@@ -1,0 +1,17 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SPPG Karang Mukti 2 - Chef Soleh</title></head><body style="max-width:480px;margin:0 auto;background:#faf6f1;font-family:sans-serif;">
+<div style="background:#1e293b;color:white;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;">
+<div><p style="color:#fbbf24;font-size:10px;font-weight:800;margin:0;">SPPG KARANG MUKTI 2</p><h1 style="font-size:20px;font-weight:800;margin:4px 0 0 0;">Tugas Tim Persiapan</h1><p style="font-size:12px;opacity:.8;margin:4px 0 0 0;">👨‍🍳 Chef: Soleh • Auto Sprenset</p></div>
+<img src="https://i.ibb.co.com/m5TmYLPD/IMG-20260926-WA5417.jpg" style="width:60px;height:60px;border-radius:50%;border:3px solid #fbbf24;object-fit:cover;"></div>
+<div style="background:#1e293b;padding:10px;display:flex;gap:8px;overflow-x:auto;">
+<button onclick="load('Minggu')" id="b-Minggu" style="padding:8px 14px;background:#fbbf24;color:#1e293b;border-radius:20px;font-weight:bold;border:none;">Minggu</button>
+<button onclick="load('Senin')" id="b-Senin" style="padding:8px 14px;background:#ffffff22;color:white;border-radius:20px;border:none;">Senin</button>
+<button onclick="load('Selasa')" id="b-Selasa" style="padding:8px 14px;background:#ffffff22;color:white;border-radius:20px;border:none;">Selasa</button>
+<button onclick="load('Rabu')" id="b-Rabu" style="padding:8px 14px;background:#ffffff22;color:white;border-radius:20px;border:none;">Rabu</button>
+<button onclick="load('Kamis')" id="b-Kamis" style="padding:8px 14px;background:#ffffff22;color:white;border-radius:20px;border:none;">Kamis</button>
+</div>
+<div id="ld" style="padding:30px;text-align:center;">🔄 Loading dari sprenset SPPG...</div><div id="ct" style="padding:16px;display:none;"></div>
+<script>
+const CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRzkTX6oRL-TQwxct7Uevs5r7J-yY4o5yGAgSQlh5gtSWeVqIZi92SoSa8UXjBEBmHVDG0nkmkK74AA/pub?output=csv";
+let rows=[];async function init(){let r=await fetch(CSV);let t=await r.text();let l=t.split("\n").filter(x=>x.trim()!="");rows=l.slice(1).map(x=>x.split(",").map(c=>c.replace(/^"|"$/g,"").trim()));document.getElementById("ld").style.display="none";document.getElementById("ct").style.display="block";load("Minggu");}
+function load(h){["Minggu","Senin","Selasa","Rabu","Kamis"].forEach(x=>{let b=document.getElementById("b-"+x);if(b){b.style.background=x==h?"#fbbf24":"#ffffff22";b.style.color=x==h?"#1e293b":"white";}});let f=rows.filter(r=>r[0]&&r[0].toLowerCase().includes(h.toLowerCase()));let html=`<p style="color:#8b7e6f;font-size:12px;">📊 ${f.length} menu untuk ${h}</p>`;f.forEach(r=>{html+=`<div style="background:white;border-radius:12px;border:1px solid #e8ddd0;margin-bottom:12px;"><div style="padding:10px 14px;font-weight:bold;border-bottom:1px solid #eee;">${r[2]||r[1]} <span style="font-size:10px;background:#faf6f1;padding:3px 7px;border-radius:8px;">${r[1]||"Menu"}</span></div><div style="padding:10px 14px;font-size:13px;">${r[3]||r.slice(2).join(" • ")}</div></div>`});document.getElementById("ct").innerHTML=html||"<div style='background:white;padding:20px;border-radius:12px;text-align:center;'>Belum ada data</div>";}init();
+</script></body></html>
