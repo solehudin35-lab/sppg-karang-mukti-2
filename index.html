@@ -1,17 +1,85 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SPPG Karang Mukti 2 - Chef Soleh</title></head><body style="max-width:480px;margin:0 auto;background:#faf6f1;font-family:sans-serif;">
-<div style="background:#1e293b;color:white;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;">
-<div><p style="color:#fbbf24;font-size:10px;font-weight:800;margin:0;">SPPG KARANG MUKTI 2</p><h1 style="font-size:20px;font-weight:800;margin:4px 0 0 0;">Tugas Tim Persiapan</h1><p style="font-size:12px;opacity:.8;margin:4px 0 0 0;">👨‍🍳 Chef: Soleh • Auto Sprenset</p></div>
-<img src="https://i.ibb.co.com/m5TmYLPD/IMG-20260926-WA5417.jpg" style="width:60px;height:60px;border-radius:50%;border:3px solid #fbbf24;object-fit:cover;"></div>
-<div style="background:#1e293b;padding:10px;display:flex;gap:8px;overflow-x:auto;">
-<button onclick="load('Minggu')" id="b-Minggu" style="padding:8px 14px;background:#fbbf24;color:#1e293b;border-radius:20px;font-weight:bold;border:none;">Minggu</button>
-<button onclick="load('Senin')" id="b-Senin" style="padding:8px 14px;background:#ffffff22;color:white;border-radius:20px;border:none;">Senin</button>
-<button onclick="load('Selasa')" id="b-Selasa" style="padding:8px 14px;background:#ffffff22;color:white;border-radius:20px;border:none;">Selasa</button>
-<button onclick="load('Rabu')" id="b-Rabu" style="padding:8px 14px;background:#ffffff22;color:white;border-radius:20px;border:none;">Rabu</button>
-<button onclick="load('Kamis')" id="b-Kamis" style="padding:8px 14px;background:#ffffff22;color:white;border-radius:20px;border:none;">Kamis</button>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPPG Karang Mukti 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#f8fafc;color:#1e293b}
+header{background:linear-gradient(135deg,#16a34a,#15803d);color:white;padding:20px;text-align:center}
+header h1{font-size:28px;font-weight:700}
+nav{background:white;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0;z-index:10;display:flex;justify-content:center;gap:20px;padding:15px;overflow-x:auto}
+nav a{text-decoration:none;color:#15803d;font-weight:600;font-size:14px}
+.hero{background:white;margin:20px;border-radius:20px;padding:30px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.05)}
+.hero h2{color:#15803d;font-size:24px;margin-bottom:10px}
+.badge{display:inline-block;background:#dcfce7;color:#15803d;padding:6px 15px;border-radius:20px;font-size:12px;font-weight:600;margin:5px}
+.container{padding:20px;max-width:1000px;margin:auto}
+.card{background:white;border-radius:16px;padding:20px;margin-bottom:20px;box-shadow:0 4px 15px rgba(0,0,0,0.05)}
+.card h3{color:#15803d;margin-bottom:15px;border-left:4px solid #16a34a;padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px}
+.person{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:15px;text-align:center}
+.task{border-left:4px solid #16a34a;background:#f8fafc;padding:12px;margin:10px 0;border-radius:0 10px 10px 0}
+footer{background:#14532d;color:white;text-align:center;padding:25px;margin-top:30px}
+.btn{display:inline-block;background:#16a34a;color:white;padding:12px 25px;border-radius:30px;text-decoration:none;font-weight:600;margin-top:15px}
+</style>
+</head>
+<body>
+<header>
+<h1>SPPG KARANG MUKTI 2</h1>
+<p>Satuan Pelayanan Pemenuhan Gizi - Karangbahagia, Bekasi</p>
+<p>🍱 Melayani Gizi Terbaik Untuk Anak Bangsa</p>
+</header>
+<nav>
+<a href="#beranda">Beranda</a>
+<a href="#tugas">Tugas Tim</a>
+<a href="#struktur">Struktur</a>
+<a href="#program">Program</a>
+<a href="#kontak">Kontak</a>
+</nav>
+<div class="container">
+<div class="hero" id="beranda">
+<h2>Selamat Datang di SPPG Karang Mukti 2</h2>
+<p>Unit pelaksana Program Makan Bergizi Gratis (MBG) yang berkomitmen menyajikan makanan sehat, higienis, dan bergizi.</p>
+<div style="margin-top:15px">
+<span class="badge">✅ Higienis</span>
+<span class="badge">✅ Bergizi</span>
+<span class="badge">✅ Tepat Waktu</span>
+<span class="badge">✅ Halal</span>
 </div>
-<div id="ld" style="padding:30px;text-align:center;">🔄 Loading dari sprenset SPPG...</div><div id="ct" style="padding:16px;display:none;"></div>
-<script>
-const CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRzkTX6oRL-TQwxct7Uevs5r7J-yY4o5yGAgSQlh5gtSWeVqIZi92SoSa8UXjBEBmHVDG0nkmkK74AA/pub?output=csv";
-let rows=[];async function init(){let r=await fetch(CSV);let t=await r.text();let l=t.split("\n").filter(x=>x.trim()!="");rows=l.slice(1).map(x=>x.split(",").map(c=>c.replace(/^"|"$/g,"").trim()));document.getElementById("ld").style.display="none";document.getElementById("ct").style.display="block";load("Minggu");}
-function load(h){["Minggu","Senin","Selasa","Rabu","Kamis"].forEach(x=>{let b=document.getElementById("b-"+x);if(b){b.style.background=x==h?"#fbbf24":"#ffffff22";b.style.color=x==h?"#1e293b":"white";}});let f=rows.filter(r=>r[0]&&r[0].toLowerCase().includes(h.toLowerCase()));let html=`<p style="color:#8b7e6f;font-size:12px;">📊 ${f.length} menu untuk ${h}</p>`;f.forEach(r=>{html+=`<div style="background:white;border-radius:12px;border:1px solid #e8ddd0;margin-bottom:12px;"><div style="padding:10px 14px;font-weight:bold;border-bottom:1px solid #eee;">${r[2]||r[1]} <span style="font-size:10px;background:#faf6f1;padding:3px 7px;border-radius:8px;">${r[1]||"Menu"}</span></div><div style="padding:10px 14px;font-size:13px;">${r[3]||r.slice(2).join(" • ")}</div></div>`});document.getElementById("ct").innerHTML=html||"<div style='background:white;padding:20px;border-radius:12px;text-align:center;'>Belum ada data</div>";}init();
-</script></body></html>
+<a class="btn" href="#tugas">Lihat Tugas Tim →</a>
+</div>
+<div class="card" id="tugas">
+<h3>📋 TUGAS TIM PERSIAPAN - Chef Solehudin</h3>
+<div class="task"><b>1. Persiapan Dapur</b><br>Cek kompor, chiller, container, kebersihan jam 04.00 WIB</div>
+<div class="task"><b>2. Penerimaan Bahan</b><br>Cek kualitas sayur, ayam, telur, beras fresh sesuai SOP</div>
+<div class="task"><b>3. Proses Memasak</b><br>Pimpin tim masak, atur bumbu, kontrol rasa & porsi 600-700 kalori</div>
+<div class="task"><b>4. Packing & QC</b><br>Packing rapi, tutup rapat, label jelas, suhu aman</div>
+<div class="task"><b>5. Distribusi & Dokumentasi</b><br>Catat porsi, foto, serah terima ke tim sekolah</div>
+<div class="task"><b>6. Laporan Harian</b><br>Laporan sisa bahan & stok besok</div>
+</div>
+<div class="card" id="struktur">
+<h3>👨‍🍳 STRUKTUR TIM</h3>
+<div class="grid">
+<div class="person"><strong>Penanggung Jawab</strong>Koordinator Utama</div>
+<div class="person"><strong>Chef Solehudin</strong>Head Chef - Auto Sprenset</div>
+<div class="person"><strong>Ahli Gizi</strong>Hitung Kalori & Menu</div>
+<div class="person"><strong>Admin Logistik</strong>Stok Bahan</div>
+<div class="person"><strong>Tim Distribusi</strong>Antar Sekolah</div>
+<div class="person"><strong>Tim Kebersihan</strong>Sanitasi</div>
+</div>
+</div>
+<div class="card" id="kontak">
+<h3>📍 KONTAK</h3>
+<p><b>Alamat:</b> Karang Mukti 2, Kab. Bekasi 17530</p>
+<p><b>Jam Dapur:</b> 04.00 - 14.00 WIB</p>
+<p><b>Status:</b> <span style="color:#16a34a;font-weight:700">● AKTIF - Tahap Persiapan</span></p>
+</div>
+</div>
+<footer>
+<h3>SPPG KARANG MUKTI 2</h3>
+<p>© 2026 - Program Makan Bergizi Gratis</p>
+</footer>
+</body>
+</html>
