@@ -70,12 +70,14 @@ function render(){
  document.getElementById('fill').style.width=pct+'%';
  document.getElementById('status').textContent=`${doneTotal}/${data.length} selesai (${pct}%)`;
  document.getElementById('live').textContent=`Live ${data.length} tugas`;
- document.getElementById('infobar').innerHTML=`${active} - ${filtered.length} tugas | Ketik <b>x</b>  Sheet = `;
+ document.getElementById('infobar').innerHTML=`${active} - ${filtered.length} tugas | Ketik <b>x</b> Sheet = `;
  let html='';
  filtered.forEach(it=>{
   let done=(it.selesai||'').toLowerCase().trim()==='x';
   let bahan=(it.bahan||'').split('||').join('<br>• ');
-  html+=`<div class="card ${done?'done':''}"><div class="head"><div style="display:flex;gap:12px;align-items:center;flex:1"><div class="check" onclick="toggle(${it.row})">${done?'✓':''}</div><div class="title">${it.menu}</div></div><div class="badges">${it.link?`<a class="badge video" href="${it.link}" target="_blank">🎥 Video</a>`:''}<span class="badge sop">📄 SOP</span></div></div><div class="box">• ${bahan}<br><br>📌 <b>SOP:</b> ${it.sop||'Beras premium Salawu'}</div></div>`;
+  let sopLink=it.link_sop||it.sop_link||it.Link_SOP||'';
+  let sopBadge=sopLink?`<a class="badge sop" href="${sopLink}" target="_blank" style="background:#dbeafe;color:#1e40af;border:1px solid #93c5fd;text-decoration:none" onclick="event.stopPropagation()">📄 SOP</a>`:`<span class="badge sop">📄 SOP</span>`;
+  html+=`<div class="card ${done?'done':''}"><div class="head"><div style="display:flex;gap:12px;align-items:center;flex:1"><div class="check" onclick="toggle(${it.row})">${done?'✓':''}</div><div class="title">${it.menu}</div></div><div class="badges">${it.link?`<a class="badge video" href="${it.link}" target="_blank">🎥 Video</a>`:''}${sopBadge}</div></div><div class="box">• ${bahan}<br><br>📌 <b>SOP:</b> ${it.sop||'Beras premium Salawu'}</div></div>`;
  });
  document.getElementById('list').innerHTML=html;
 }
