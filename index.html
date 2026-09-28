@@ -4,7 +4,6 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SPPG Karang Mukti 2</title>
 <style>
- const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyOZuEsYnZa3-jcePLS_BqmacEV85JySOiszZ5s0Qcuj4FMZLP68LPEf4bjzSYtF7Gq/exec";
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#f1f5f9;font-family:system-ui,sans-serif;max-width:500px;margin:0 auto}
 .header{background:#1e293b;color:#fff;padding:16px 14px;border-radius:0 0 16px 16px}
@@ -17,7 +16,6 @@ body{background:#f1f5f9;font-family:system-ui,sans-serif;max-width:500px;margin:
 .fill{height:100%;background:#22c55e;width:0%;transition:.4s}
 .status{font-size:12px;color:#86efac;margin-top:6px}
 .tabs{display:flex;gap:8px;overflow-x:auto;padding:12px 12px 6px;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
 .tab{padding:10px 18px;border-radius:24px;background:#fff;border:1.5px solid #e2e8f0;font-weight:700;white-space:nowrap;cursor:pointer;font-size:14px}
 .tab.active{background:#1e293b;color:#fff;border-color:#1e293b}
 .infobar{padding:0 14px 8px;font-size:12px;color:#64748b}
@@ -52,7 +50,7 @@ body{background:#f1f5f9;font-family:system-ui,sans-serif;max-width:500px;margin:
 <div class="infobar" id="infobar">Memuat...</div>
 <div class="list" id="list"></div>
 <script>
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyU8eQA6nTCoTpp2UOvD-LEDaNpqaXX5TI8dMhht-g6AelRStD6GlGSe8EJudCHrNaZ/exec";
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyOZuEsYnZa3-jcePLS_BqmacEV85JySOiszZ5s0Qcuj4FMZLP68LPEf4bjzSYtF7Gq/exec";
 let data=[],active='Senin';
 async function load(){
  let r=await fetch(SCRIPT_URL);
@@ -71,14 +69,14 @@ function render(){
  document.getElementById('fill').style.width=pct+'%';
  document.getElementById('status').textContent=`${doneTotal}/${data.length} selesai (${pct}%)`;
  document.getElementById('live').textContent=`Live ${data.length} tugas`;
- document.getElementById('infobar').innerHTML=`${active} - ${filtered.length} tugas | Ketik <b>x</b> Sheet = `;
+ document.getElementById('infobar').innerHTML=`${active} - ${filtered.length} tugas`;
  let html='';
  filtered.forEach(it=>{
   let done=(it.selesai||'').toLowerCase().trim()==='x';
   let bahan=(it.bahan||'').split('||').join('<br>• ');
-  let sopLink=it.link_sop||it.sop_link||it.Link_SOP||'';
-  let sopBadge=sopLink?`<a class="badge sop" href="${sopLink}" target="_blank" style="background:#dbeafe;color:#1e40af;border:1px solid #93c5fd;text-decoration:none" onclick="event.stopPropagation()">📄 SOP</a>`:`<span class="badge sop">📄 SOP</span>`;
-  html+=`<div class="card ${done?'done':''}"><div class="head"><div style="display:flex;gap:12px;align-items:center;flex:1"><div class="check" onclick="toggle(${it.row})">${done?'✓':''}</div><div class="title">${it.menu}</div></div><div class="badges">${it.link?`<a class="badge video" href="${it.link}" target="_blank">🎥 Video</a>`:''}${sopBadge}</div></div><div class="box">• ${bahan}<br><br>📌 <b>SOP:</b> ${it.sop||'Beras premium Salawu'}</div></div>`;
+  let sopLink=(it.link_sop||'').trim();
+  let sopBadge=sopLink?`<a class="badge sop" href="${sopLink}" target="_blank" style="background:#dbeafe;color:#1e40af;border:1px solid #93c5fd;text-decoration:none">📄 SOP</a>`:`<span class="badge sop" style="opacity:.4">📄 SOP</span>`;
+  html+=`<div class="card ${done?'done':''}"><div class="head"><div style="display:flex;gap:12px;align-items:center;flex:1"><div class="check" onclick="toggle(${it.row})">${done?'✓':''}</div><div class="title">${it.menu}</div></div><div class="badges">${it.link?`<a class="badge video" href="${it.link}" target="_blank">🎥 Video</a>`:''}${sopBadge}</div></div><div class="box">• ${bahan}<br><br>📌 <b>SOP:</b> ${it.sop||''}</div></div>`;
  });
  document.getElementById('list').innerHTML=html;
 }
@@ -86,10 +84,9 @@ async function toggle(row){
  let it=data.find(x=>x.row==row);
  let newVal=(it.selesai||'').toLowerCase().trim()==='x'?'':'x';
  it.selesai=newVal; render();
- document.getElementById('status').textContent='Menyimpan ke Sheet...';
+ document.getElementById('status').textContent='Menyimpan...';
  await fetch(`${SCRIPT_URL}?action=update&row=${row}&val=${encodeURIComponent(newVal)}`,{mode:'no-cors'});
- document.getElementById('status').textContent='';
- setTimeout(render,1000);
+ setTimeout(load,1200);
 }
 load();
 </script>
